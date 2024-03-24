@@ -3,8 +3,8 @@
 </script>
 
 <template>
-    <div class="">
-      Welcome to WEBSITE
+    <div class="text-xl">
+      Welcome to WEBSITE <i class="fa-solid fa-ghost"></i>
     </div>
 </template>
 

@@ -4,16 +4,23 @@ import Input from "@/components/inputs/Input.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useAuth } from "@/stores/auth";
+import { useAlert } from '@/stores/alert';
 import { storeToRefs } from "pinia";
+import { useTitle } from "@vueuse/core";
+
+const title = useTitle()
+title.value = "Đăng ký"
 
 const router = useRouter();
-
+const alert = useAlert();
 
 // Store
 const auth = useAuth();
 
 const { errors } = storeToRefs(auth);
 const { register, clearError } = auth;
+
+const { showAlertMessage } = alert;
 
 // Ref
 const agree = ref(false)
@@ -38,7 +45,11 @@ const onSubmit = async () => {
         isLoading.value = false;
         if (data) {
             clearError();
-            router.push("/")
+            showAlertMessage('success', 'Đăng ký thành công');
+            
+            setTimeout(() => {
+                router.back();
+            }, 500)
         }
     } else {
         showMessage.value = true;
@@ -52,10 +63,12 @@ const onSubmit = async () => {
             <div class="col-span-2">
                 <router-link to="/" class="font-bold"><i class="fa-solid fa-house  mr-2"></i> Fistore</router-link>
                 <div class="flex justify-between py-12">
-                    <router-link @click="clearError" to="/login" class=" bg-gray-100 py-1.5 px-2.5 font-semibold text-sm ">
+                    <router-link @click="clearError" to="/login"
+                        class=" bg-gray-100 py-1.5 px-2.5 font-semibold text-sm ">
                         Đăng nhập
                     </router-link>
-                    <router-link @click="clearError" to="/register" class=" bg-blue-100 py-1.5 px-2.5 text-blue-500 font-semibold text-sm">
+                    <router-link @click="clearError" to="/register"
+                        class=" bg-blue-100 py-1.5 px-2.5 text-blue-500 font-semibold text-sm">
                         Đăng ký
                     </router-link>
                 </div>
@@ -83,7 +96,8 @@ const onSubmit = async () => {
                                 Đồng ý với chính sách và điều khoản
                             </label>
                         </div>
-                        <p v-if="showMessage" class="mt-2 text-[10px] text-red-600 absolute bottom-[45px]">Vui lòng đồng ý với điều khoản</p>
+                        <p v-if="showMessage" class="mt-2 text-[10px] text-red-600 absolute bottom-[45px]">Vui lòng đồng
+                            ý với điều khoản</p>
                         <button type="submit"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-0 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center">
                             Đăng ký

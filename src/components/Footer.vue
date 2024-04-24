@@ -9,13 +9,13 @@ import FooterList from '@/components/FooterList.vue'
     <footer class="bg-gray-900 mt-6 border-t ">
         <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
             <div class="md:flex md:justify-between">
-                <div class="mb-6 md:mb-0">
-                    <!-- Logo here -->
-                    <span href="https://flowbite.com/" class="flex items-center">
-                        <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo" />
-                        <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Fistore</span>
-                    </span>
-                </div>
+                <router-link to="/" class="mb-6 md:mb-0">
+                    <h2 class="text-3xl font-bold text-white text-center flex gap-0 items-end">
+                        Fisb
+                        <i class="fa-solid fa-fish" style="color: #74C0FC;"></i>
+                        k
+                    </h2>
+                </router-link>
                 <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
                     <FooterList 
                         title="Dịch vụ"

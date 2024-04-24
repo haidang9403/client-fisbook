@@ -4,16 +4,25 @@ import Input from "@/components/inputs/Input.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useAuth } from "@/stores/auth";
+import { useAlert } from '@/stores/alert';
+import { useLoading } from "@/stores/loading"
 import { storeToRefs } from "pinia";
+import { useTitle } from "@vueuse/core";
 
+const title = useTitle()
+title.value = "Đăng nhập"
 
 const router = useRouter();
 
 // Store
 const auth = useAuth();
+const alert = useAlert();
+const { showLoading } = useLoading();
 
 const { errors } = storeToRefs(auth);
 const { login, clearError } = auth;
+
+const { showAlertMessage } = alert;
 
 // Ref
 const user = ref({
@@ -29,8 +38,13 @@ const onSubmit = async () => {
     const data = await login(user.value);
     isLoading.value = false;
     if(data){
+        showLoading();
         clearError();
-        router.push("/")
+        showAlertMessage('success', 'Đăng nhập thành công');
+        setTimeout(() => {
+            router.back();
+        }, 200)
+
     }
 }   
 </script>

@@ -1,13 +1,26 @@
 import { defineStore } from "pinia";
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { computedAsync } from '@vueuse/core'
+import { useAlert } from "./alert";
 import authService from "@/services/auth.service";
 
 export const useAuth = defineStore('auth', () => {
     const user = ref(null);
 
     const errors = ref([]);
-    const isLogin = computed(() => !!user);
-    const accessToken = computed(() => user?.accessToken);
+
+    const isLogin = computedAsync(
+        async () => {
+            return await authService.getRefeshToken(user.value) && !!user.value;
+        },
+        !!user.value
+    );
+
+    const getLogin = async () => {
+        return await authService.getRefeshToken(user.value) && !!user.value
+    }
+
+    const accessToken = computed(() => user.value?.accessToken);
 
     const commit = (action, payload) => {
         switch (action) {
@@ -16,7 +29,6 @@ export const useAuth = defineStore('auth', () => {
                 errors.value = [];
                 break;
             case 'LOGIN_FAILURE':
-                user.value = null;
                 errors.value = payload;
                 break;
             case 'LOGOUT':
@@ -43,17 +55,54 @@ export const useAuth = defineStore('auth', () => {
         }
     }
 
+    async function changePassword(credentials) {
+        try {
+            const data = await authService.changePassword(user.value._id, credentials)
+            commit('LOGIN_SUCCESS', data);
+            return true
+        } catch (error) {
+            commit('LOGIN_FAILURE', error?.response?.data)
+            return false
+        }
+    }
+
     async function register(credentials) {
         try {
             const data = await authService.register(credentials);
             commit('LOGIN_SUCCESS', data);
             return data;
         } catch (error) {
+            if (error?.response?.data.message) {
+                const { showAlertMessage } = useAlert();
+                showAlertMessage('danger', "Có lỗi xảy ra")
+            }
             commit('LOGIN_FAILURE', error?.response?.data)
         }
     }
 
-    return { user, errors, isLogin, accessToken, login, register, clearError }
+    async function logout() {
+        try {
+            await authService.logout();
+            commit('LOGOUT');
+            return true
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    return {
+        user,
+        errors,
+        isLogin,
+        accessToken,
+        login,
+        register,
+        logout,
+        clearError,
+        commit,
+        getLogin,
+        changePassword
+    }
 }, {
     persist: {
         paths: ['user']

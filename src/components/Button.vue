@@ -7,9 +7,9 @@ defineProps({
     danger: Boolean,
     shadow: Boolean,
     disabled: Boolean,
+    onClick: Function,
+    isFull: Boolean,
 })
-
-const emit = defineEmits(['onClick']);
 
 </script>
 
@@ -20,12 +20,14 @@ const emit = defineEmits(['onClick']);
                 'text-white bg-red-700 hover:bg-red-800 focus:ring-red-300': danger,
                 'text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-yellow-300': warning,
                 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 ': !secondary && !danger && !warning,
-                'shadow-lg shadow-blue-300': shadow && !secondary && !danger && !warning,
+                'shadow-lg shadow-blue-100': shadow && !secondary && !danger && !warning,
                 'shadow-lg shadow-red-200': shadow && danger,
                 'shadow-lg shadow-yellow-100': shadow && warning,
-                'shadow-lg shadow-gray-50': shadow && secondary
+                'shadow-lg shadow-gray-50': shadow && secondary,
+                'w-full' : isFull,
+                'opacity-80 pointer-events-none' : disabled
             }" 
-        @click="emit('onClick')"
+        @click.prevent="onClick"
         :disabled="disabled"
         >
         <slot>

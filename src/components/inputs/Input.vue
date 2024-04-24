@@ -1,5 +1,5 @@
 <template>
-    <div class="mb-6">
+    <div v-if="type !== 'file'" class="mb-6">
         <div class="relative">
             <input @focusin="emit('inFocus')" v-model="model" :type="type" :id="id" :disabled="disabled"
                 class=" block px-2.5 pb-2.5 pt-4 w-full text-sm bg-transparent rounded-lg border-1 focus:outline-none focus:ring-0 peer"
@@ -22,9 +22,22 @@
         </div>
         <p v-if="errors[id]" class="mt-2 text-sm text-red-600">{{ errors[id] }}</p>
     </div>
+    <div v-else  class="flex-col flex items-center">
+        <div>
+            <label :for="id" class="flex font-semibold gap-2 items-center justify-center focus:ring-2 rounded-lg text-sm px-5 py-2.5 focus:outline-none text-black border border-gray-200 bg-white cursor-pointer hover:bg-gray-100 focus:ring-gray-100">
+                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                {{ label || "Tải lên" }}
+            </label>
+            <input type="file" :id="id" hidden @change="inputFile"/>
+        </div>
+        <p v-if="errors[id]" class="mt-2 text-sm text-red-600">{{ errors[id]}}</p>
+    </div>
 </template>
 
 <script setup>
+import { FwbFileInput } from 'flowbite-vue';
+import Button from '../Button.vue';
+import { ref } from 'vue';
 
 defineProps({
     label: String,
@@ -41,9 +54,29 @@ defineProps({
     placeholder: String
 })
 
-const emit = defineEmits(['inFocus'])
-
+const emit = defineEmits(['inFocus', 'inputFile', 'getImage'])
 
 const model = defineModel();
+
+const image = ref(null)
+
+const inputFile = (e) => {
+    const file = e.target.files[0];
+    if(!file) {
+        emit('inputFile', undefined);
+        return
+    }
+
+    if(file.type.split("/")[0] == "image"){
+        const url = URL.createObjectURL(file);
+        image.value = {
+            name: file.name,
+            url
+        }
+        emit('getImage', image.value)
+    }
+
+    emit('inputFile', file);
+}   
 
 </script>

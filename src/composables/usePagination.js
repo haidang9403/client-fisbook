@@ -19,9 +19,13 @@ export default function usePagination(data, perPage = 10) {
     const setPage = (numPage) => {
         page.value = numPage;
         const currentPath = router.currentRoute.value.path;
+        const query = router.currentRoute.value.query
         router.push({
             path: currentPath,
-            query: { page: numPage }
+            query: {
+                ...query,
+                page: numPage
+            }
         })
     }
 

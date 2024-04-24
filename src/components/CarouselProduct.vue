@@ -3,12 +3,23 @@ import { initCarousels } from 'flowbite';
 import { onMounted } from 'vue';
 import Button from './Button.vue';
 import CardItem from './CardItem.vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 defineProps({
     title: String,
     products: Array,
     bgColor: String,
 })
+
+const handleClick = (id) => {
+    router.push({
+        path: "/borrow",
+        query: {
+            book: id
+        }
+    })
+}
 
 onMounted(() => {
     initCarousels();
@@ -23,18 +34,20 @@ onMounted(() => {
             overflow-hidden
             h-full
             w-full
+            bg-orange-400
+            bg-
             max-w-sm 
-            bg-amber-400
             gap-4
             rounded-lg
             ">
             <h3 class="py-3 w-full text-center font-bold text-lg">{{ title }}</h3>
             <!-- Item -->
             <div v-for="(product,index) in products" :key="index" class="hidden duration-200" data-carousel-item>
-                <div class="absolute flex justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                    <CardItem :image="product.image" :title="product.title">
+                <router-link :to="'/product/' + product._id"
+                    class="absolute flex justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                    <CardItem :image="product.img" :title="product.title" title-class="text-center">
                         <template #button>
-                            <Button secondary class="w-32">
+                            <Button secondary class="w-32" :on-click="() => handleClick(product._id)">
                                 <span>
                                     <i class="fa-solid fa-dong-sign text-sm"></i>
                                     <span class="text-base font-semibold">{{ product.price.toLocaleString() }}</span>
@@ -42,12 +55,12 @@ onMounted(() => {
                             </Button>
                         </template>
                     </CardItem>
-                </div>
+                </router-link>
             </div>
         </div>
         <!-- Slider indicators -->
         <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-            <button v-for="(_,index) in products" :key="index" type="button" class="w-3 h-3 rounded-full"
+            <button v-for="(_,index) in products" :key="index" type="button" class="w-3 h-3 shadow rounded-full"
                 aria-current="true" aria-label="Slide 1" :data-carousel-slide-to="index"></button>
         </div>
         <!-- Slider controls -->
@@ -55,7 +68,7 @@ onMounted(() => {
             class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
             data-carousel-prev>
             <span
-                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                class="inline-flex shadow items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
                 <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -68,7 +81,7 @@ onMounted(() => {
             class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
             data-carousel-next>
             <span
-                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                class="inline-flex shadow items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
                 <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

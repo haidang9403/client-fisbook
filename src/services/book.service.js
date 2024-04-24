@@ -1,5 +1,5 @@
 import createApiClient from "./api.service";
-
+import queryString from "@/utils/queryString";
 
 class BookService {
     constructor(baseURL = "/api/bookstore") {
@@ -7,24 +7,24 @@ class BookService {
         this.api = createApiClient(baseURL);
     }
 
-    async getAll() {
-        return (await this.api.get("/book")).data;
+    async getAll(query = '') {
+        return (await this.api.get('/book' + queryString(query))).data;
     }
 
     async getOne(id) {
         return (await this.api.get("/book/" + id)).data;
     }
 
-    async getAuthor() {
-        return (await this.api.get("/author")).data;
+    async getAuthor(query = '') {
+        return (await this.api.get("/author" + queryString(query))).data;
     }
 
-    async getCategory() {
-        return (await this.api.get("/category")).data;
+    async getCategory(query = '') {
+        return (await this.api.get("/category" + queryString(query))).data;
     }
 
-    async getPublisher() {
-        return (await this.api.get("/publisher")).data;
+    async getPublisher(query = '') {
+        return (await this.api.get("/publisher" + queryString(query))).data;
     }
 }
 

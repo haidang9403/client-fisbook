@@ -1,12 +1,3 @@
-# Công việc
-
-    - Còn detail product
-    - Handle order
-    - Search
-    - Profile
-
-#
-
 # -
 
 This template should help get you started developing with Vue 3 in Vite.
